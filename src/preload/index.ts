@@ -1,8 +1,13 @@
-import { contextBridge } from 'electron'
+import { contextBridge, ipcRenderer, webUtils } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 
 // Custom APIs for renderer
-const api = {}
+const api = {
+  extractVideoInfo: (filePath: string) => ipcRenderer.invoke('extract-video-info', filePath),
+  getFilePath: (file: File) => webUtils.getPathForFile(file),
+  selectDirectory: () => ipcRenderer.invoke('dialog:openDirectory'),
+  processVideo: (videoPath: string, outputDir: string, keywords: string[], padBefore: number, padAfter: number) => ipcRenderer.invoke('process-video', videoPath, outputDir, keywords, padBefore, padAfter)
+}
 
 // Use `contextBridge` APIs to expose Electron APIs to
 // renderer only if context isolation is enabled, otherwise
