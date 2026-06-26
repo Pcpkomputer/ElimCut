@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
+import logoUrl from '../../../resources/icon.png'
 import Versions from './components/Versions'
 import electronLogo from './assets/electron.svg'
 
@@ -90,11 +91,12 @@ function App(): React.JSX.Element {
         setFiles(currentFiles => currentFiles.map((f, index) =>
           index === i ? { ...f, status: 'done' } : f
         ))
-      } catch (err) {
+      } catch (err: any) {
         console.error("Error processing video:", err)
         setFiles(currentFiles => currentFiles.map((f, index) =>
           index === i ? { ...f, status: 'error' } : f
         ))
+        alert(`Error processing ${currentFile.name}:\n${err.message || err}`)
       }
     }
 
@@ -110,16 +112,9 @@ function App(): React.JSX.Element {
         <aside className="bg-surface-container text-primary font-label-md text-label-md docked left-0 h-full w-64 border-r border-outline-variant flex flex-col py-stack-lg transition-all duration-200 ease-in-out">
           <div style={{ marginBottom: 25 }} className="px-gutter mb-stack-lg">
             <div className="flex items-center gap-stack-md">
-              <div className="w-10 h-10 rounded bg-primary-container flex items-center justify-center">
-                <span
-                  className="material-symbols-outlined text-on-primary-container"
-                  style={{ fontVariationSettings: '"FILL" 1' }}
-                >
-                  video_library
-                </span>
-              </div>
+              <img src={logoUrl} alt="ElimCut Logo" className="w-10 h-10 object-contain rounded drop-shadow-md" />
               <div>
-                <h2 className="font-headline-sm text-headline-sm font-black text-primary">
+                <h2 className="font-headline-sm text-headline-sm font-black bg-gradient-to-r from-[#297ECB] to-[#B347C7] text-transparent bg-clip-text drop-shadow-sm">
                   ElimCut
                 </h2>
                 <p className="text-[10px] uppercase tracking-widest text-on-surface-variant opacity-60">
@@ -317,7 +312,7 @@ function App(): React.JSX.Element {
                   }
                   setIsModalOpen(true)
                 }}
-                disabled={files.length === 0}
+                disabled={files.length === 0 || isProcessing}
                 className="px-8 h-11 rounded bg-primary font-label-md text-label-md text-on-primary font-bold hover:bg-primary-container transition-all shadow-lg shadow-primary/10 active:scale-95 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100"
               >
                 Proceed to Configure
