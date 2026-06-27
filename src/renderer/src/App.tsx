@@ -481,7 +481,7 @@ function VideoPlayerModal({ videoPath, onClose }: { videoPath: string, onClose: 
         {/* Body */}
         <div className="bg-black flex items-center justify-center aspect-video relative">
           <video
-            src={`file://${encodeURI(videoPath)}`}
+            src={`file://${videoPath.replace(/\\/g, '/').startsWith('/') ? '' : '/'}${encodeURI(videoPath.replace(/\\/g, '/'))}`}
             controls
             autoPlay
             className="w-full h-full"
