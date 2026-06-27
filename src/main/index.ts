@@ -77,8 +77,8 @@ app.whenReady().then(() => {
   electronApp.setAppUserModelId('com.electron')
 
   // Set the dock icon for macOS during development
-  if (process.platform === 'darwin') {
-    app?.dock?.setIcon(icon)
+  if (is.dev && process.platform === 'darwin') {
+    app.dock.setIcon(icon)
   }
 
   // Default open or close DevTools by F12 in development
