@@ -1,5 +1,5 @@
 appId: com.electron.app
-productName: elimcut
+productName: ElimCut
 directories:
   buildResources: build
 files:
