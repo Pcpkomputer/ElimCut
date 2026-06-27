@@ -108,6 +108,10 @@ app.whenReady().then(() => {
         ? path.join(process.resourcesPath, 'resources', 'ElimCutEngine')
         : path.join(__dirname, '../../resources/ElimCutEngine')
       
+      const logPath = path.join(app.getPath('userData'), 'elimcut-engine.log')
+      fs.appendFileSync(logPath, `\n\n--- New Processing Run at ${new Date().toISOString()} ---\n`)
+      fs.appendFileSync(logPath, `Command: ${exePath} --video ${videoPath} --out ${outputDir} --keywords ${keywords.join(',')} --pad_before ${padBefore} --pad_after ${padAfter}\n`)
+
       const child = spawn(exePath, [
         '--video', videoPath,
         '--out', outputDir,
@@ -117,14 +121,17 @@ app.whenReady().then(() => {
       ])
       
       child.stdout.on('data', (data) => {
+        fs.appendFileSync(logPath, `STDOUT: ${data}\n`)
         console.log(`ElimCutEngine: ${data}`)
       })
       
       child.stderr.on('data', (data) => {
+        fs.appendFileSync(logPath, `STDERR: ${data}\n`)
         console.error(`ElimCutEngine Error: ${data}`)
       })
       
       child.on('close', (code) => {
+        fs.appendFileSync(logPath, `--- Process exited with code ${code} ---\n`)
         if (code === 0) {
           resolve(true)
         } else {
