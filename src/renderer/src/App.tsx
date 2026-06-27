@@ -11,6 +11,7 @@ function App(): React.JSX.Element {
   const [padBefore, setPadBefore] = useState<string>("1.5")
   const [padAfter, setPadAfter] = useState<string>("1.5")
   const [isProcessing, setIsProcessing] = useState(false)
+  const [videoToPlay, setVideoToPlay] = useState<string | null>(null)
   const [files, setFiles] = useState<any[]>([])
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -286,7 +287,7 @@ function App(): React.JSX.Element {
                           </div>
                         ) : (
                           <>
-                            <button disabled={isProcessing} className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-surface-variant text-on-surface-variant transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+                            <button disabled={isProcessing} onClick={() => setVideoToPlay(file.path)} className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-surface-variant text-on-surface-variant transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
                               <span className="material-symbols-outlined">play_circle</span>
                             </button>
                             <button disabled={isProcessing} onClick={() => setFiles(files.filter(f => f.id !== file.id))} className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-error/10 text-on-surface-variant hover:text-error transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
@@ -447,7 +448,47 @@ function App(): React.JSX.Element {
         </div>
       )}
 
+      {/* Video Player Modal */}
+      {videoToPlay && (
+        <VideoPlayerModal
+          videoPath={videoToPlay}
+          onClose={() => setVideoToPlay(null)}
+        />
+      )}
+
+
     </>
+  )
+}
+
+function VideoPlayerModal({ videoPath, onClose }: { videoPath: string, onClose: () => void }) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-8">
+      <div className="bg-surface-container rounded-xl border border-outline-variant shadow-2xl flex flex-col overflow-hidden max-w-5xl w-full">
+        {/* Header */}
+        <div className="px-gutter py-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-high">
+          <h3 className="font-headline-sm text-headline-sm text-on-surface truncate pr-4">
+            Video Preview
+          </h3>
+          <button
+            onClick={onClose}
+            className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-surface-variant text-on-surface-variant transition-colors cursor-pointer flex-shrink-0"
+          >
+            <span className="material-symbols-outlined">close</span>
+          </button>
+        </div>
+
+        {/* Body */}
+        <div className="bg-black flex items-center justify-center aspect-video relative">
+          <video
+            src={`file://${encodeURI(videoPath)}`}
+            controls
+            autoPlay
+            className="w-full h-full"
+          />
+        </div>
+      </div>
+    </div>
   )
 }
 
