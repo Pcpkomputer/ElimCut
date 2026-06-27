@@ -78,7 +78,7 @@ app.whenReady().then(() => {
 
   // Set the dock icon for macOS during development
   if (process.platform === 'darwin') {
-    app.dock.setIcon(icon)
+    app?.dock?.setIcon(icon)
   }
 
   // Default open or close DevTools by F12 in development
@@ -102,7 +102,7 @@ app.whenReady().then(() => {
     }
   })
 
-  ipcMain.handle('process-video', async (event, videoPath, outputDir, keywords, padBefore, padAfter) => {
+  ipcMain.handle('process-video', async (_, videoPath, outputDir, keywords, padBefore, padAfter) => {
     return new Promise((resolve, reject) => {
       const exePath = app.isPackaged
         ? path.join(process.resourcesPath, 'ElimCutEngine')
