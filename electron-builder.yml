@@ -13,6 +13,7 @@ extraResources:
   - "resources/**"
 win:
   executableName: ElimCut
+  icon: resources/icon.png
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}
