@@ -105,7 +105,7 @@ app.whenReady().then(() => {
   ipcMain.handle('process-video', async (_, videoPath, outputDir, keywords, padBefore, padAfter) => {
     return new Promise((resolve, reject) => {
       const exePath = app.isPackaged
-        ? path.join(process.resourcesPath, 'ElimCutEngine')
+        ? path.join(process.resourcesPath, 'resources', 'ElimCutEngine')
         : path.join(__dirname, '../../resources/ElimCutEngine')
       
       const child = spawn(exePath, [
